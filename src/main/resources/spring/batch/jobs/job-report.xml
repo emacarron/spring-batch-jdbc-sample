@@ -18,37 +18,14 @@
 		</batch:step>
 	</batch:job>
 
-	<bean id="cvsFileItemReader"
-		class="org.springframework.batch.item.database.JdbcCursorItemReader">
-		<property name="dataSource" ref="dataSource" />
-		<property name="sql">
-			<value>
-            <![CDATA[        
-            	select VAL from INPUT_TABLE;
-            ]]>
-			</value>
-		</property>
-		<property name="rowMapper">
-			<bean
-				class="com.mkyong.model.DataRowMapper" />
-		</property>
+	<bean id="cvsFileItemReader" class="org.mybatis.spring.batch.MyBatisCursorItemReader">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="queryId" value="getVal" />
 	</bean>
 
-	<bean id="mysqlItemWriter"
-		class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-		<property name="dataSource" ref="dataSource" />
-		<property name="sql">
-			<value>
-            <![CDATA[        
-            	insert into OUTPUT_TABLE(VAL) values (:val)
-            ]]>
-			</value>
-		</property>
-		<!-- It will take care matching between object property and sql name parameter -->
-		<property name="itemSqlParameterSourceProvider">
-			<bean
-				class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
-		</property>
+	<bean id="mysqlItemWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+	  <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	  <property name="statementId" value="insertVal" />
 	</bean>
 
 </beans>
